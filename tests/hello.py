@@ -37,14 +37,14 @@ def main():
    except Thrift.TException, tex:
       print 'Thrift: %s' % tex.message
    finally:
-      pass
+      transport.close()
 
    #Now retrieve data from cassandra database
    try:
-      #transport.open()
+      transport.open()
       data = client.get_slice(keyspace,key,column_parent,\
                               slice_predicate,consistency)
-      print data
+      print data[0].column.value
    except Thrift.TException, tex:
       print 'Thrift %s' % tex.message
    finally:
