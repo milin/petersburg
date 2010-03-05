@@ -5,16 +5,19 @@
 #
 #
 
-
-import lazyboy
 from thrift import Thrift
+from thrift.transport import TTransport
+from thrift.transport import TSocket
+from thrift.protocol.TBinaryProtocol import TBinaryProtocolAccelerated
 from cassandra import Cassandra
 from cassandra.ttypes import *
 import time
 
-client = lazyboy.connection.Client(['localhost:9160'])
-
 def main():
+   socket = TSocket.TSocket("localhost",9160)
+   transport = TTransport.TBufferedTransport(socket)
+   protocol = TBinaryProtocol.TBinaryProtocolAccelerated(transport)
+   client = Cassandra.Client(protocol)
    keyspace = "Twitter"
    column_path = ColumnPath(column_family="Timeline",column="message")
    key = "pinggoat"
