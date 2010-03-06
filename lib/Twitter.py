@@ -35,14 +35,13 @@ class TwitterStream(tweepy.StreamListener):
          #TODO: Implement cassandra interface libs & logging mechanism
          logger.subsection("received new status")
       except:
-         pass
-
+         logger.subsection("WARN: status error")
    def on_error(self, status_code):
-      #Call logging mechanism
+      logger.subsection("WARN: non-200 HTTP code returned "+ str(status_code))
       return True
 
    def on_timeout(self):
-      #Call logging mechanism and attempt to reconnect
+      #Call logging mecha
 
    def on_limit(self, track):
       #Call logging mechanism
