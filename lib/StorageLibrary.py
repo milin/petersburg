@@ -17,35 +17,31 @@
 #   along with this program; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from thrift import Thrift
-from thrift.transport import TTransport
-from thrift.transport import TSocket
-from thrift.protocol.TBinaryProtocol import TBinaryProtocolAccelerated
-from cassandra import Cassandra
-from cassandra.ttypes import *
-import time
-import tweepy
+from lazyboy import *
+from lazyboy.key import Key
 import Logger as logger
 
-class CassandraStorage:
-   def __init__(self, keyspace="Twitter"):
-      self.socket = TSocket.TSocket("localhost",9160)
-      self.transport = TTransport.TBufferedTransport(self.socket)
-      self.protocol = \
-      TBinaryProtocol.TBinaryProtocolAccelerated(self.transport)
-      self.client = Cassandra.Client(self.protocol)
-      self.keyspace = keyspace
+connection.add_pool('Twitter',['localhost:9160'])
 
-   def store(self,column_family=None,key=None, column=None, value=""):
-      if not column_family or key or column:
-         logger.subsection("WARN: no column_family, key or column specified")
-         return
-      column_path = ColumnPath(column_family=column_family,column=column)
-      try:
-         self.transport.open()
-         self.client.insert(self.keyspace, key, column_path, value,\
-                           time.time(),ConsistencyLevel.ONE)
-      except Thrift.TException, tex:
-         logger.subsection("WARN: thrift error "+tex.message)
-      finally:
-         transport.close()
+class CassandraStorage:
+   def __init__(self, keyspace="Twitter",key=None, column_fam):
+      self.keyspace = keyspace
+      self.column_family = column_fam
+
+   #TODO: Create batch save to recordset
+   def store(self,data):
+      #Create Message
+      message = Message(data)
+      message.key = MessageKey(column_family=self.column_family)
+
+      #Store Message
+      message.save()
+
+class MessageKey(Key):
+   def __init__(self, key=None, column_family=None):
+      Key.__init__(self,"Twitter",column_family,key)
+
+class Message(record.Record):
+   def __init__(self, *args, **kwargs):
+      record.Record.__init__(self, *args, **kwargs)
+      #self.key = MessageKey() #Key must be set in CassandraStorage
