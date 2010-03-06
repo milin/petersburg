@@ -25,7 +25,7 @@ def initialize():
 	filename = "/var/log/petersburg/twitterlog"
 	if (not (path.isdir('/var/log/petersburg'))):
 		mkdir("/var/log/petersburg")
-                commands.getoutput("chown `whoami`")
+                commands.getoutput("chown /var/log/petersburg `whoami`")
 	
 	FILE = open(filename, "w")
 	FILE.writelines("")

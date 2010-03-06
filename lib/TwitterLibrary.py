@@ -35,7 +35,7 @@ class TwitterStream(tweepy.StreamListener):
       try:
          #TODO: Implement cassandra interface libs & logging mechanism
          logger.subsection("received new status")
-         print status
+         print status.text, status.source
       except:
          logger.subsection("WARN: status error")
 
