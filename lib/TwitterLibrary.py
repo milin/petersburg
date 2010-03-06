@@ -19,7 +19,7 @@
 
 import tweepy
 import getpass
-import lib.Logger as logger
+import Logger as logger
 
 #Implements basic methods such as retrieving specific message
 #or profile information.
@@ -28,22 +28,26 @@ class TwitterBasic:
    def authenticate(self,username,password):
       auth = tweepy.BasicAuthHandler(username,password)
       return tweepy.API(auth)
-   
+
+#Implements methods related to streaming of twitter data
 class TwitterStream(tweepy.StreamListener):
    def on_status(self, status):
       try:
          #TODO: Implement cassandra interface libs & logging mechanism
          logger.subsection("received new status")
+         print status
       except:
          logger.subsection("WARN: status error")
+
    def on_error(self, status_code):
       logger.subsection("WARN: non-200 HTTP code returned "+ str(status_code))
       return True
 
    def on_timeout(self):
-      #Call logging mecha
+      logger.subsection("WARN: connection timeout")
+      #TODO: attempt to reconnect
 
    def on_limit(self, track):
-      #Call logging mechanism
+      logger.subsection("WARN: limit message encountered")
 
 
