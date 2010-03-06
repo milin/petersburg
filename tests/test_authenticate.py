@@ -16,7 +16,7 @@ class TestAuthentication(unittest.TestCase):
       self.password = getpass.getpass("enter password: ")
    
    def test_authenticate(self):
-      x = Ingest.Twitter()
+      x = Ingest.TwitterBasic()
       portal = x.authenticate(self.username, self.password)
       portal.update_status("hello world test from cscbot1")
 

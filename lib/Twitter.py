@@ -19,13 +19,32 @@
 
 import tweepy
 import getpass
+import lib.Logger as logger
 
-class Twitter:
-   
+#Implements basic methods such as retrieving specific message
+#or profile information.
+class TwitterBasic:
    #Authenticates our twitter bot for streaming
    def authenticate(self,username,password):
       auth = tweepy.BasicAuthHandler(username,password)
       return tweepy.API(auth)
+   
+class TwitterStream(tweepy.StreamListener):
+   def on_status(self, status):
+      try:
+         #TODO: Implement cassandra interface libs & logging mechanism
+         logger.subsection("received new status")
+      except:
+         pass
 
+   def on_error(self, status_code):
+      #Call logging mechanism
+      return True
+
+   def on_timeout(self):
+      #Call logging mechanism and attempt to reconnect
+
+   def on_limit(self, track):
+      #Call logging mechanism
 
 
