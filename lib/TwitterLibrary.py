@@ -20,6 +20,7 @@
 import tweepy
 import getpass
 import Logger as logger
+import StorageLibrary as store
 
 #Implements basic methods such as retrieving specific message
 #or profile information.
@@ -31,11 +32,14 @@ class TwitterBasic:
 
 #Implements methods related to streaming of twitter data
 class TwitterStream(tweepy.StreamListener):
+   def __init(self):
+      self.cassandra = store.CassandraStorage("Timeline")
+
    def on_status(self, status):
       try:
-         #TODO: Implement cassandra interface libs & logging mechanism
+         #TODO: Connect hash to storage system
          logger.subsection("received new status")
-         print status.text, status.source
+         
       except:
          logger.subsection("WARN: status error")
 
