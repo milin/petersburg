@@ -19,29 +19,32 @@
 
 from lazyboy import *
 from lazyboy.key import Key
+from thrift import Thrift
 import Logger as logger
 
 connection.add_pool('Twitter',['localhost:9160'])
 
 class CassandraStorage:
-   def __init__(self, keyspace="Twitter",key=None, column_fam):
+   def __init__(self, keyspace="Twitter",column_family=None):
+      if(not column_family):
+         logger.subsection("ERROR: no column family specified")
+         return 
       self.keyspace = keyspace
-      self.column_family = column_fam
-
+      self.column_family = column_family
+      return 
    #TODO: Create batch save to recordset
    def store(self,data):
       #Create Message
       message = Message(data)
-      message.key = MessageKey(column_family=self.column_family)
+      message.key = Key(keyspace=self.keyspace, 
+                        column_family=self.column_family)
 
       #Store Message
-      message.save()
-
-class MessageKey(Key):
-   def __init__(self, key=None, column_family=None):
-      Key.__init__(self,"Twitter",column_family,key)
+      try:
+         message.save()
+      except:
+         logger.subsection("ERROR: could not save to cassandra")
 
 class Message(record.Record):
    def __init__(self, *args, **kwargs):
       record.Record.__init__(self, *args, **kwargs)
-      #self.key = MessageKey() #Key must be set in CassandraStorage

@@ -30,6 +30,7 @@ def initialize():
 	FILE = open(filename, "w")
 	FILE.writelines("")
 	FILE.close()
+        commands.getoutput("chown "+filename+" `whoami`")
 
 def section(title = None):
 	value = "="*40 + "\n"+ "== "+title+"\n"+"="*40
