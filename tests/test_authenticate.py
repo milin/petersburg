@@ -5,10 +5,10 @@
 #
 
 import sys
-sys.path.append("../")
+sys.path.append("../lib")
 import unittest
 import getpass
-import Ingest
+import TwitterLibrary
 
 class TestAuthentication(unittest.TestCase):
    def setUp(self):
@@ -16,9 +16,9 @@ class TestAuthentication(unittest.TestCase):
       self.password = getpass.getpass("enter password: ")
    
    def test_authenticate(self):
-      x = Ingest.TwitterBasic()
+      x = TwitterLibrary.TwitterBasic()
       portal = x.authenticate(self.username, self.password)
-      portal.update_status("hello world test from cscbot1")
+      portal.update_status("hello world, data is yummy")
 
 if __name__ == '__main__':
    unittest.main()
