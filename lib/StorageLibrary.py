@@ -32,6 +32,7 @@ class CassandraStorage:
       self.keyspace = keyspace
       self.column_family = column_family
       return 
+
    #TODO: Create batch save to recordset
    def store(self,data):
       #Create Message

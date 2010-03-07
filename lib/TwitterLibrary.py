@@ -35,11 +35,20 @@ class TwitterStream(tweepy.StreamListener):
    def __init(self):
       self.cassandra = store.CassandraStorage("Timeline")
 
+   #Triggered when a new status is received. It tries to store
+   #its contents in storage system
+   #
+   #Keys: {'username', 'message','time','client'}
+   #TODO: Implement location tag
    def on_status(self, status):
+      data = dict()
+      data['username'] = status.screen_name
+      data['message'] = status.text
+      data['time'] = status.created_at
+      data['client'] = status.source
+
       try:
-         #TODO: Connect hash to storage system
-         logger.subsection("received new status")
-         
+         self.cassandra.store(data)
       except:
          logger.subsection("WARN: status error")
 
