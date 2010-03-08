@@ -26,25 +26,31 @@ def main():
    consistency = ConsistencyLevel.ONE
    column_parent = ColumnParent(column_family="Timeline")
    slice_range = SliceRange(start='',finish='')
-   slice_predicate =SlicePredicate(slice_range= slice_range)
+   slice_predicate =SlicePredicate(column_names=["username","message", "time"])
    
    #Insert data into cassandra database with already defined schema
 
-   try:
-      transport.open()
-      client.insert(keyspace,key,column_path,value,timestamp,\
-      ConsistencyLevel.ZERO)
-   except Thrift.TException, tex:
-      print 'Thrift: %s' % tex.message
-   finally:
-      transport.close()
+  # try:
+  #    transport.open()
+  #    client.insert(keyspace,key,column_path,value,timestamp,\
+  #    ConsistencyLevel.ZERO)
+  # except Thrift.TException, tex:
+  #    print 'Thrift: %s' % tex.message
+  # finally:
+  #    transport.close()
 
    #Now retrieve data from cassandra database
    try:
       transport.open()
-      data = client.get_slice(keyspace,key,column_parent,\
-                              slice_predicate,consistency)
-      print data[0].column.value
+      start_key=finish_key=""
+      row_count = 10000
+      data = client.get_range_slice(keyspace,
+                                       column_parent,
+                                       slice_predicate,
+                                       start_key,
+                                       finish_key,
+                                       row_count,
+                                       ConsistencyLevel.ONE)
    except Thrift.TException, tex:
       print 'Thrift %s' % tex.message
    finally:
