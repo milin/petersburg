@@ -31,8 +31,6 @@ def main():
    stream = tweepy.Stream(username, password, twitlib.TwitterStream(),\
             timeout=6.0)
 
-   stream_mode = 'sample'
-
    stream.sample()
 
 if __name__ == '__main__':
