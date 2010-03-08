@@ -32,7 +32,9 @@ class TwitterBasic:
 
 #Implements methods related to streaming of twitter data
 class TwitterStream(tweepy.StreamListener):
-   cassandra = store.CassandraStorage(column_family="Timeline")
+   def __init__(self):
+      tweepy.StreamListener.__init__(self)
+      self.cassandra = store.CassandraStorage(column_family="Timeline")
 
    #Triggered when a new status is received. It tries to store
    #its contents in storage system
@@ -47,7 +49,7 @@ class TwitterStream(tweepy.StreamListener):
       data['client'] = status.source
 
       try:
-         cassandra.store(data)
+         self.cassandra.store(data)
       except:
          logger.subsection("WARN: status error")
 
