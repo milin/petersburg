@@ -41,7 +41,7 @@ class TwitterStream(tweepy.StreamListener):
    #TODO: Implement location tag
    def on_status(self, status):
       data = dict()
-      data['username'] = status.screen_name
+      data['username'] = status.author.screen_name
       data['message'] = status.text
       data['time'] = status.created_at
       data['client'] = status.source
