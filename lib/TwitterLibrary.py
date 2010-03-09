@@ -39,14 +39,13 @@ class TwitterStream(tweepy.StreamListener):
    #Triggered when a new status is received. It tries to store
    #its contents in storage system
    #
-   #Keys: {'username', 'message','time','client'}
+   #Storage format: unique_username: associated message
    #TODO: Implement location tag
+   #TODO: Create new CF for usernames and other attributes
    def on_status(self, status):
       data = dict()
-      data['username'] = status.author.screen_name
-      data['message'] = status.text
-      data['time'] = status.created_at
-      data['client'] = status.source
+      data[status.author.screen_name] = status.text
+      data['latest_time'] = status.created_at
 
       try:
          self.cassandra.store(data)

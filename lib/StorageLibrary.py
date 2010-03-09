@@ -21,6 +21,8 @@ from lazyboy import *
 from lazyboy.key import Key
 from thrift import Thrift
 import Logger as logger
+import time
+import datetime
 
 connection.add_pool('Twitter',['localhost:9160'])
 
@@ -38,7 +40,8 @@ class CassandraStorage:
       #Create Message
       message = Message(data)
       message.key = Key(keyspace=self.keyspace, 
-                        column_family=self.column_family)
+                        column_family=self.column_family,
+                        key=str(time.mktime(datetime.datetime.now().timetuple())))
 
       #Store Message
       try:
